@@ -10,14 +10,21 @@
       version = builtins.substring 0 8 lastModifiedDate;
 
       # System types to support.
-
       supportedSystems = [ "x86_64-linux" ];
-      forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs { inherit system; };
-      });
+
+      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+      # Nixpkgs instantiated for supported system types.
+      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in
     {
-      packages = forEachSupportedSystem ({ pkgs }: rec {
+
+
+      packages = forAllSystems (system:
+          with nixpkgsFor.${system};
+      {
+
       fortune = pkgs.stdenv.mkDerivation rec {
           pname = "fortune-mod";
           version = "3.20.0";
@@ -62,7 +69,8 @@
             maintainers = with maintainers; [ vonfry ];
           };
         };
-        packages.x86_64-linux.default = self.fortune;
+       default = fortune;
+       defaultPackage = forAllSystems (system: self.packages.${system}.samplePackage);
 
     });
   };
