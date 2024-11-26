@@ -69,9 +69,8 @@
             maintainers = with maintainers; [ vonfry ];
           };
         };
-       default = fortune;
-       defaultPackage = forAllSystems (system: self.packages.${system}.fortune);
 
-    });
+      });
+     defaultPackage = forAllSystems (system: self.packages.${system}.fortune);
   };
 }
