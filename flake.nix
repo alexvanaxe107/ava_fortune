@@ -62,7 +62,7 @@
             maintainers = with maintainers; [ vonfry ];
           };
         };
-        default = fortune;
+        packages.x86_64-linux.default = self.fortune;
 
     });
   };
