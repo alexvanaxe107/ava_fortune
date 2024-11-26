@@ -70,7 +70,7 @@
           };
         };
        default = fortune;
-       defaultPackage = forAllSystems (system: self.packages.${system}.samplePackage);
+       defaultPackage = forAllSystems (system: self.packages.${system}.fortune);
 
     });
   };
